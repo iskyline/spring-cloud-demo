@@ -9,10 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>spring-discover-eureka</artifactId>
+    <artifactId>spring-discovery-eureka</artifactId>
     <packaging>jar</packaging>
 
-    <name>spring-discover-eureka</name>
+    <name>spring-discovery-eureka</name>
     <url>http://www.chiliba.cn</url>
     <description>Spring Cloud 实例：注册中心Eureka</description>
 

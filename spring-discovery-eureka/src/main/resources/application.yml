@@ -1,0 +1,19 @@
+server:
+  port: 6000  # 端口
+
+spring:
+  application:
+    #如果不指定本名称，Eureka Server的管理页面显示UNKNOWN
+    name: spring-discovery-eureka
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    #自身是否作为子服务进行注册
+    registerWithEureka: false
+    #是否获取注册列表
+    fetchRegistry: false
+    serviceUrl:
+      #注册地址
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/

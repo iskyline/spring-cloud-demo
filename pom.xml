@@ -18,7 +18,7 @@
     <modules>
         <module>spring-provider</module>
         <module>spring-customer</module>
-        <module>spring-discover-eureka</module>
+        <module>spring-discovery-eureka</module>
     </modules>
 
     <name>spring-cloud-demo</name>
@@ -36,6 +36,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <dependencyManagement>
