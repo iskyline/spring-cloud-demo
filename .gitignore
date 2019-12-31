@@ -21,3 +21,64 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Created by .ignore support plugin (hsz.mobi)
+.idea/
+.svn
+*.iml
+.settings
+target
+.project
+.classpath
+.metadata
+.externalToolBuilders
+bin
+*.log
+.DS_Store
+.springBeans
+.clover
+rebel.xml
+.bpmn
+logs
+out
+logdir
+.MF
+*.iws
+*.iml
+*.ipr
+target/
+.settings
+.project
+.classpath
+.externalToolBuilders
+*.class
+*svn/
+.idea/
+*.war
+.idea\workspace.xml
+
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
