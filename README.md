@@ -1,4 +1,4 @@
-# SpringCloud系列(Greenwich.SR4)之二：服务注册与发现Eureka(上)
+# SpringCloud系列(Greenwich.SR4)之二：服务注册与发现Eureka(1)
 
 [源码 Gitee：https://gitee.com/iskyline/spring-cloud-demo](https://gitee.com/iskyline/spring-cloud-demo)
 
@@ -81,7 +81,6 @@ Eureka分两部分：
 │  │      spring_discover_eureka_war_exploded.xml
 │  │
 │  └─libraries
-│          Maven__antlr_antlr_2_7_7.xml
 │          ***
 │
 ├─spring-customer
@@ -104,9 +103,9 @@ Eureka分两部分：
 │          └─resources
 │                  application.yml
 │
-├─spring-discover-eureka
+├─spring-discovery-eureka
 │  │  pom.xml
-│  │  spring-discover-eureka.iml
+│  │  spring-discovery-eureka.iml
 │  │
 │  └─src
 │      └─main
@@ -140,7 +139,6 @@ Eureka分两部分：
             │
             └─resources
                     application.yml
-
 ```
 
 #### 4. 创建项目和模块
@@ -155,7 +153,7 @@ idea中创建项目以及项目下的模块有多重方法，非常方便。不�
 > spring cloud依赖
 
 注意`spring-cloud-dependencies`的版本是`Greenwich.SR4`
-```
+```xml
 <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -188,7 +186,8 @@ idea中创建项目以及项目下的模块有多重方法，非常方便。不�
 ```
 
 > 因为spring cloud使用的版本是 `Greenwich.SR4`,根据官网版本关系可知，spring boot 应该选择2.1.*
-```
+
+```xml
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -198,7 +197,8 @@ idea中创建项目以及项目下的模块有多重方法，非常方便。不�
 ```
 
 > 子模块管理
-``` 
+
+```xml
 <modules>
     <module>spring-discover-eureka</module>
     <module>spring-provider</module>
@@ -207,7 +207,8 @@ idea中创建项目以及项目下的模块有多重方法，非常方便。不�
 ```
 
 - pom中引入`spring-boot-maven-plugin`，这样不用在每个子服务中添加了
-```
+
+```xml
 <build>
     <plugins>
         <plugin>
@@ -221,7 +222,8 @@ idea中创建项目以及项目下的模块有多重方法，非常方便。不�
 ###### 4.2. 模块：服务注册与发现 spring-discover-eureka
 
 > pom文件主要内容
-```
+
+```xml
 <dependencies>
     <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -231,13 +233,17 @@ idea中创建项目以及项目下的模块有多重方法，非常方便。不�
 ```
 
 > Application类
-``` 
+
+```java
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+
 @EnableEurekaServer
 @SpringBootApplication
 public class SpringEurekaApplication {
 
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(args));
         SpringApplication.run(SpringEurekaApplication.class,args);
     }
 
@@ -245,7 +251,8 @@ public class SpringEurekaApplication {
 ```
 
 > application.yml配置
-``` 
+
+```yaml
 server:
   port: 6000  # 端口
 
@@ -268,6 +275,7 @@ eureka:
 ```
 
 到这一步可以启动`SpringEurekaApplication`，正常启动信息如下：
+
 ``` 
 Connected to the target VM, address: '127.0.0.1:53571', transport: 'socket'
 []
@@ -329,12 +337,14 @@ Connected to the target VM, address: '127.0.0.1:53571', transport: 'socket'
 ```
 
 此时浏览器中输入：http://localhost:6000/ ，可以看到server的状态页面
+![image](https://p3.pstatp.com/origin/pgc-image/7c308b26db1141af8af7bcdf916c8e6b)
 
 
 ###### 4.3. 模块：spring-provider
 
 > pom.xml
-``` 
+
+```xml
 <dependencies>
     <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -345,14 +355,106 @@ Connected to the target VM, address: '127.0.0.1:53571', transport: 'socket'
 
 > Application启动类
 
+```java
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+
+@EnableEurekaClient
+@SpringBootApplication
+public class SpringProviderApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringProviderApplication.class,args);
+    }
+
+}
+```
+
 > application.yml 配置
 
-> api接口
+```yaml
+server:
+  port: 8000
+
+spring:
+  application:
+    name: spring-provider
+
+eureka:
+  client:
+    serviceUrl:
+      #Eureka Server的地址，注意：一定要有 /eureka/
+      defaultZone: http://localhost:6000/eureka/
+```
+
+此时，首先启动注册中心：`SpringEurekaApplication`，然后启动 `SpringProviderApplication`，正常启动成功的信息是：
+
+``` 
+Connected to the target VM, address: '127.0.0.1:55200', transport: 'socket'
+2019-12-31 20:42:22.181  INFO 118716 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$b7eda9fc] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.1.5.RELEASE)
+
+2019-12-31 20:42:22.475  INFO 118716 --- [           main] c.i.d.s.p.SpringProviderApplication      : No active profile set, falling back to default profiles: default
+2019-12-31 20:42:22.869  INFO 118716 --- [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=7ff4e414-d7e5-3e41-9ce7-2dde6c0af16f
+2019-12-31 20:42:22.922  INFO 118716 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$b7eda9fc] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-12-31 20:42:23.098  INFO 118716 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8000 (http)
+2019-12-31 20:42:23.115  INFO 118716 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-12-31 20:42:23.115  INFO 118716 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.19]
+2019-12-31 20:42:23.228  INFO 118716 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-12-31 20:42:23.228  INFO 118716 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 744 ms
+2019-12-31 20:42:23.278  WARN 118716 --- [           main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2019-12-31 20:42:23.278  INFO 118716 --- [           main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2019-12-31 20:42:23.282  WARN 118716 --- [           main] c.n.c.sources.URLConfigurationSource     : No URLs will be polled as dynamic configuration sources.
+2019-12-31 20:42:23.282  INFO 118716 --- [           main] c.n.c.sources.URLConfigurationSource     : To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2019-12-31 20:42:23.407  INFO 118716 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2019-12-31 20:42:24.085  INFO 118716 --- [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2019-12-31 20:42:24.114  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2019-12-31 20:42:24.383  INFO 118716 --- [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2019-12-31 20:42:24.383  INFO 118716 --- [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2019-12-31 20:42:24.483  INFO 118716 --- [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2019-12-31 20:42:24.483  INFO 118716 --- [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2019-12-31 20:42:24.658  INFO 118716 --- [           main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2019-12-31 20:42:24.786  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2019-12-31 20:42:24.786  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2019-12-31 20:42:24.786  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2019-12-31 20:42:24.786  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2019-12-31 20:42:24.786  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2019-12-31 20:42:24.786  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2019-12-31 20:42:24.786  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2019-12-31 20:42:24.951  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2019-12-31 20:42:24.953  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2019-12-31 20:42:24.955  INFO 118716 --- [           main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2019-12-31 20:42:24.958  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1577796144957 with initial instances count: 0
+2019-12-31 20:42:24.958  INFO 118716 --- [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application SPRING-PROVIDER with eureka with status UP
+2019-12-31 20:42:24.959  INFO 118716 --- [           main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1577796144959, current=UP, previous=STARTING]
+2019-12-31 20:42:24.960  INFO 118716 --- [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_SPRING-PROVIDER/lun-a-p1.grandsoft.com.cn:spring-provider:8000: registering service...
+2019-12-31 20:42:24.988  INFO 118716 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8000 (http) with context path ''
+2019-12-31 20:42:24.989  INFO 118716 --- [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8000
+2019-12-31 20:42:25.021  INFO 118716 --- [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_SPRING-PROVIDER/lun-a-p1.grandsoft.com.cn:spring-provider:8000 - registration status: 204
+2019-12-31 20:42:25.155  INFO 118716 --- [           main] c.i.d.s.p.SpringProviderApplication      : Started SpringProviderApplication in 3.916 seconds (JVM running for 4.718)
+```
+
+其中有注册到注册中心的提示信息(倒数第二行)：
+`DiscoveryClient_SPRING-PROVIDER/lun-a-p1.grandsoft.com.cn:spring-provider:8000 - registration status: 204`
+同样的在注册中心spring-discovery-eureka的日志中有同样注册成功信息：
+`Registered instance SPRING-PROVIDER/lun-a-p1.grandsoft.com.cn:spring-provider:8000 with status UP (replication=false)`
+
+然后再server的web页面中的 **Instances currently registered with Eureka** 列表中能够看到注册的子服务：
+![image](https://p3.pstatp.com/large/pgc-image/c09fb248f06e485391df9697f9f22330)
 
 ###### 4.4. 模块：spring-customer
-
+在本节，本模块当前和spring-provider完全一样（除了端口和名称）
 > pom.xml
-``` 
+
+```xml
 <dependencies>
     <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -363,9 +465,45 @@ Connected to the target VM, address: '127.0.0.1:53571', transport: 'socket'
 
 > Application启动类
 
+```java
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+
+@EnableEurekaClient
+@SpringBootApplication
+public class SpringCustomerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringCustomerApplication.class,args);
+    }
+
+}
+```
+
 > application.yml 配置
 
-> api接口
+```yaml
+server:
+  port: 8001
+
+spring:
+  application:
+    name: spring-customer
+
+eureka:
+  client:
+    serviceUrl:
+      #Eureka Server的地址，注意：一定要有 /eureka/
+      defaultZone: http://localhost:6000/eureka/
+```
+
+三个子服务：spring-discovery-eureka、spring-provider、spring-customer都启动完成后，注册中心管理页面是
+![image](https://p3.pstatp.com/origin/pgc-image/4617ef45d4174c91a9b910a55bdeb25c)
+
+#### 5. 总结
+至此，注册中心成功启动，子服务正常注册。下一节，实现两个子服务的通信，customer调用provider中的api
+
 
 #### 5. 总结
 Spring Cloud Netflix 中提供了多个组件：服务发现(Eureka)、断路器(Hystrix)、智能路由(Zuul)和客户端负载平衡(Ribbon)。用这些可以快速构件一个大型微服务。

@@ -1,2 +1,12 @@
 server:
-  port: 8001
+  port: 8000
+
+spring:
+  application:
+    name: spring-provider
+
+eureka:
+  client:
+    serviceUrl:
+      #Eureka Server的地址，注意：一定要有 /eureka/
+      defaultZone: http://localhost:6000/eureka/
