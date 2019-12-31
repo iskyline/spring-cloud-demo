@@ -331,7 +331,6 @@ Connected to the target VM, address: '127.0.0.1:53571', transport: 'socket'
 此时浏览器中输入：http://localhost:6000/ ，可以看到server的状态页面
 
 
-
 ###### 4.3. 模块：spring-provider
 
 > pom.xml
