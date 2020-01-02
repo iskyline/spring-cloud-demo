@@ -1,12 +1,15 @@
 server:
-  port: 8001
+  port: 8300
 
 spring:
   application:
     name: spring-customer
 
 eureka:
+  instance:
+    instance-id: instanceId-${spring.application.name}
+    prefer-ip-address: true
   client:
     serviceUrl:
       #Eureka Server的地址，注意：一定要有 /eureka/
-      defaultZone: http://localhost:6000/eureka/
+      defaultZone: http://localhost:6001/eureka/
