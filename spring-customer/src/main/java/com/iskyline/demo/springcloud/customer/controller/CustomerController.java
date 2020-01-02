@@ -14,9 +14,14 @@ public class CustomerController {
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     * FIXME：注意，spring-provider后面没有端口号
+     * @param msg
+     * @return
+     */
     @GetMapping("say")
     public String say(@RequestParam(name="msg") String msg){
-        String url = String.format("http://localhost:8200/provider/hello?msg=%s",msg);
+        String url = String.format("http://spring-provider/provider/hello?msg=%s",msg);
         String result = restTemplate.getForObject(url,String.class);
         return "customer:".concat(result);
     }
