@@ -10,23 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-customer</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>spring-customer</name>
     <url>http://www.chiliba.cn</url>
+    <modules>
+        <module>spring-customer-server</module>
+        <module>spring-customer-client</module>
+    </modules>
     <description>Spring Cloud 实例：子服务Customer</description>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-    </dependencies>
 
 </project>
