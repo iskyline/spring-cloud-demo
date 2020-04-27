@@ -8,7 +8,14 @@ public class UserController {
 
     @RequestMapping(value = "{userId}/getUserName",method = RequestMethod.GET)
     public String getUserName(@PathVariable("userId") Long userId){
-        return userId+":张三";
+        System.out.println("before:::userId="+userId+";"+System.currentTimeMillis());
+        try {
+            Thread.sleep(900);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("after:::userId="+userId+";"+System.currentTimeMillis());
+        return userId+":张三"+System.currentTimeMillis();
     }
 
 }
