@@ -13,9 +13,4 @@ eureka:
   client:
     serviceUrl:
       #Eureka Server的地址，注意：一定要有 /eureka/
-      defaultZone: http://localhost:6001/eureka/
-feign:
-  httpclient:
-    enabled: false
-  okhttp:
-    enabled: true
+      defaultZone: http://${eureka.host:127.0.0.1}:${eureka.port:6001}/eureka/
