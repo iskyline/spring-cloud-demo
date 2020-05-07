@@ -14,3 +14,7 @@ eureka:
     serviceUrl:
       #Eureka Server的地址，注意：一定要有 /eureka/
       defaultZone: http://${eureka.host:127.0.0.1}:${eureka.port:6001}/eureka/
+
+feign:
+  hystrix:
+    enabled: true

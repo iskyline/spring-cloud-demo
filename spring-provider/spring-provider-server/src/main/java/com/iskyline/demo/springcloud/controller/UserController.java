@@ -14,8 +14,8 @@ public class UserController {
 
     @RequestMapping(value = "{userId}/getUserName",method = RequestMethod.GET)
     public String getUserName(@PathVariable("userId") Long userId, HttpServletRequest request){
-        System.out.println("ServerPort:"+port+",port:"+request.getServerPort()+",userId="+userId+";"+System.currentTimeMillis());
-        return "ServerPort:"+port+",port:"+request.getServerPort()+","+userId+":张三"+System.currentTimeMillis();
+        System.out.println("Provider ServerPort:"+port+",port:"+request.getServerPort()+",userId="+userId+";"+System.currentTimeMillis());
+        return "Provider ServerPort:"+port+","+userId+":张三"+System.currentTimeMillis();
     }
 
 }
