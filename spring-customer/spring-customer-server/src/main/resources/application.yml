@@ -15,6 +15,13 @@ eureka:
       #Eureka Server的地址，注意：一定要有 /eureka/
       defaultZone: http://${eureka.host:127.0.0.1}:${eureka.port:6001}/eureka/
 
+# feign启用hystrix
 feign:
   hystrix:
     enabled: true
+# hystrix的dashboard
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: hystrix.stream
